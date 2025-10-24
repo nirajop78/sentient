@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sentient AGI Hub — Cyberpunk</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root{
+      --neon-1: #00f0ff;
+      --neon-2: #7b61ff;
+      --bg-dark: #06060a;
+      --card: rgba(255,255,255,0.03);
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: #e6eef8; }
+
+    /* animated grid + glow */
+    .bg-grid{
+      position: fixed; inset:0; z-index:-2; background: radial-gradient( circle at 10% 10%, rgba(123,97,255,0.07), transparent 10% ),
+      linear-gradient(180deg, rgba(10,10,20,1) 0%, rgba(6,6,10,1) 50%, rgba(2,2,6,1) 100%);
+      overflow: hidden;
+    }
+    .glow {
+      position: absolute; filter: blur(60px); opacity: 0.7; mix-blend-mode: screen;
+    }
+    /* minimal glass */
+    .glass { background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.04); backdrop-filter: blur(6px); }
+
+    /* header neon */
+    .logo { font-weight:800; font-size:1.25rem; background: linear-gradient(90deg,var(--neon-1),var(--neon-2)); -webkit-background-clip:text; background-clip:text; color: transparent; }
+
+    /* link hover */
+    a.nav-link:hover { color: var(--neon-1); transform: translateY(-2px); }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 10px; height:10px; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, rgba(123,97,255,0.3), rgba(0,240,255,0.3)); border-radius: 999px; }
+
+    /* confetti placeholder */
+    .confetti { position: absolute; pointer-events:none; z-index:50; inset:0; }
+  </style>
+</head>
+<body class="min-h-screen antialiased">
+
+  <div class="bg-grid"></div>
+  <div class="glow" style="width:520px;height:520px;right:-120px;top:-80px;background:radial-gradient(circle,#7b61ff,transparent 40%)"></div>
+  <div class="glow" style="width:420px;height:420px;left:-140px;bottom:-120px;background:radial-gradient(circle,#00f0ff,transparent 25%)"></div>
+
+  <!-- Header -->
+  <header class="w-full max-w-6xl mx-auto flex items-center justify-between py-6 px-6">
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0ee3ff] to-[#7b61ff] flex items-center justify-center shadow-lg">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M3 12h18" stroke="#031026" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </div>
+      <div>
+        <div class="logo">Sentient AGI Hub</div>
+        <div class="text-xs text-gray-400 -mt-1">Community-owned AGI tools & engagement</div>
+      </div>
+    </div>
+
+    <nav class="hidden md:flex items-center gap-6 text-sm text-gray-300">
+      <a class="nav-link hover:text-white cursor-pointer" onclick="showSection('faq')">FAQ</a>
+      <a class="nav-link hover:text-white cursor-pointer" onclick="showSection('quiz')">Quiz</a>
+      <a class="nav-link hover:text-white cursor-pointer" onclick="showSection('chat')">Chatbot</a>
+      <a class="nav-link hover:text-white cursor-pointer" onclick="showSection('progress')">Progress</a>
+      <a class="ml-4 px-3 py-2 rounded-lg bg-gradient-to-r from-[#00f0ff]/10 to-[#7b61ff]/10 text-sm" href="https://arxiv.org/abs/2411.03887" target="_blank">Whitepaper</a>
+    </nav>
+
+    <div class="md:hidden">
+      <button onclick="toggleMobile()" class="px-3 py-2 border rounded-md glass">Menu</button>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="max-w-6xl mx-auto px-6 pb-24">
+    <!-- hero -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+      <div class="space-y-4">
+        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">Build **Loyal AI** with Sentient</h1>
+        <p class="text-gray-300 max-w-lg">Open, community-built AGI — aligned to people not corporations. Learn the rules, contribute, and climb AGI roles through meaningful work.</p>
+
+        <div class="flex gap-3 mt-6">
+          <button onclick="showSection('quiz')" class="px-5 py-3 rounded-lg bg-gradient-to-r from-[#00f0ff] to-[#7b61ff] text-black font-semibold shadow-lg">Start Quiz</button>
+          <button onclick="showSection('chat')" class="px-5 py-3 rounded-lg border glass">Ask the AGI Bot</button>
+          <button onclick="showSection('progress')" class="px-5 py-3 rounded-lg border glass">My Progress</button>
+        </div>
+
+        <div class="mt-6 text-sm text-gray-400">Pro tip: take the track-specific quiz (Artist/Builder/Educator/Helpers) to earn points shown in Progress.</div>
+      </div>
+
+      <div class="glass p-6 rounded-2xl shadow-lg">
+        <div class="flex items-start gap-4">
+          <div class="w-16 h-16 rounded-lg bg-[#061024] flex items-center justify-center border border-[#0ee3ff]/10">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4z" stroke="#7b61ff" stroke-width="1.6"/></svg>
+          </div>
+          <div>
+            <div class="text-sm text-gray-300">Quick Stats</div>
+            <div class="text-2xl font-bold mt-1">Community: 1.4k members</div>
+            <div class="text-sm text-gray-400 mt-1">Quizzes completed: <span id="stat-quizzes">0</span> • Badges: <span id="stat-badges">0</span></div>
+            <div class="mt-4">
+              <div class="text-xs text-gray-400">Top contributor</div>
+              <div class="font-semibold">@VibeRise • Advanced AGI</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- sections container -->
+    <section id="sections" class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- FAQ card -->
+      <div class="glass p-5 rounded-2xl">
+        <h3 class="text-lg font-bold text-[#00f0ff]">FAQ</h3>
+        <p class="text-sm text-gray-300 mt-2">Core mission & contribution rules. <button class="ml-2 text-xs underline" onclick="showSection('faq')">Open FAQ</button></p>
+      </div>
+
+      <!-- Quiz card -->
+      <div class="glass p-5 rounded-2xl">
+        <h3 class="text-lg font-bold text-[#7b61ff]">Quiz</h3>
+        <p class="text-sm text-gray-300 mt-2">Track-based quizzes to test understanding & earn points. <button class="ml-2 text-xs underline" onclick="showSection('quiz')">Take Quiz</button></p>
+      </div>
+
+      <!-- Chatbot card -->
+      <div class="glass p-5 rounded-2xl">
+        <h3 class="text-lg font-bold text-[#00ffd6]">AGI Chatbot</h3>
+        <p class="text-sm text-gray-300 mt-2">Ask role & submission rules. Built from the site's FAQ dataset. <button class="ml-2 text-xs underline" onclick="showSection('chat')">Chat Now</button></p>
+      </div>
+    </section>
+
+    <!-- dynamic section area -->
+    <div id="appArea" class="mt-10"></div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="max-w-6xl mx-auto px-6 text-sm text-gray-400 py-10">
+    <div class="flex justify-between items-center">
+      <div>© 2025 Sentient — Loyal AI for humanity</div>
+      <div class="space-x-4">
+        <a href="https://x.com" target="_blank" class="underline">X</a>
+        <a href="https://discord.gg" target="_blank" class="underline">Discord</a>
+        <a href="https://github.com" target="_blank" class="underline">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Confetti container -->
+  <canvas id="confetti-canvas" class="confetti"></canvas>
+
+  <!-- SCRIPT: dataset + SPA logic -->
+  <script>
+    /**********************
+     * DATASET: FAQ text
+     * (condensed / keyed for chatbot & FAQ UI)
+     **********************/
+    const FAQ = [
+      { id:'mission-1', q:'What is our mission at Sentient?', a: `Today, AI development is dominated by a few organisations building AGI privately. Sentient's mission is to build Loyal AI — community-built, community-aligned, community-controlled and community-owned AGI that serves humanity, not corporations.` },
+      { id:'mission-2', q:'What is Sentient?', a: `Sentient is building the world's first open and community-built AGI — competing with closed systems by focusing on openness, ownership and community alignment.` },
+      { id:'problem', q:'What problem does Sentient solve?', a: `Sentient addresses the risk of closed-source AGI where a few companies control AGI knowledge, behaviour and influence — a concentration of power that threatens society.` },
+      { id:'solution', q:'What is Sentient’s solution for building AGI?', a: `Sentient builds open-source AGI as a network of specialised intelligences (models + agents) that together form a community-built general intelligence.` },
+      { id:'loyalty', q:'What is loyal AI?', a: `LOYALTY = ALIGNMENT + OWNERSHIP + CONTROL. Loyal AI is aligned to community values, owned by the community and controlled by community governance.` },
+      { id:'whitepaper', q:'Where is the Sentient whitepaper?', a: `The Sentient OML whitepaper is at https://arxiv.org/abs/2411.03887` },
+      { id:'ecosystem', q:'How does Sentient create value for users & builders?', a: `Sentient Chat connects users with specialised agents. Premium access revenue flows back to creators, creating a self-sustaining ecosystem of distribution and value creation.` },
+      { id:'position', q:'How does Sentient position itself vs others?', a: `Sentient is unique: open, community-owned, and commercially viable — maximizing both openness and utility.` },
+
+      // Contribution FAQs
+      { id:'contrib-1', q:'How can I contribute to Sentient?', a: `Create educational content, help members on Discord, build tools, or produce Sentient artworks. Share contributions in relevant channels (artist-junior, builder-junior, educator-junior) after claiming contributor roles.` },
+      { id:'contrib-2', q:'How to gain AGI roles or access senior channels?', a: `Once you make significant contributions in a track, request AGI role promotion via the application template. Requests are reviewed every Friday.` },
+      { id:'contrib-3', q:'What makes a good contribution?', a: `Visibility & quality: original effort, clear value. For artists: creativity & process. For builders: technical guides & demos. For educators: deep analysis & guides. Helpers: consistent, supportive guidance to newcomers.` },
+      { id:'contrib-4', q:'Role visual change 6/23/25', a: `Visual presentation updated on 6/23/25 — only visuals changed; role meaning and requirements unchanged.` }
+    ];
+
+    /**********************
+     * lightweight SPA: showSection
+     **********************/
+    function showSection(name){
+      const area = document.getElementById('appArea');
+      if(name === 'faq') return renderFAQ(area);
+      if(name === 'quiz') return renderQuiz(area);
+      if(name === 'chat') return renderChat(area);
+      if(name === 'progress') return renderProgress(area);
+      area.innerHTML = '';
+    }
+
+    /**********************
+     * RENDER: FAQ
+     **********************/
+    function renderFAQ(container){
+      container.innerHTML = `
+        <div class="glass p-6 rounded-2xl">
+          <div class="flex justify-between items-center">
+            <h2 class="text-xl font-bold">Frequently Asked Questions</h2>
+            <input id="faq-search" placeholder="Search FAQs..." class="p-2 rounded-md text-black w-64"/>
+          </div>
+          <div id="faq-list" class="mt-4 space-y-3 max-h-96 overflow-auto pr-2"></div>
+        </div>
+      `;
+      const list = document.getElementById('faq-list');
+      function renderList(filter=''){
+        list.innerHTML = '';
+        FAQ.filter(item => (item.q + ' ' + item.a).toLowerCase().includes(filter.toLowerCase()))
+           .forEach(item => {
+             const el = document.createElement('div');
+             el.className = 'p-3 rounded-lg bg-[#07071a] border border-[#ffffff08]';
+             el.innerHTML = `<div class="font-semibold">${item.q}</div><div class="text-sm text-gray-300 mt-2">${item.a}</div>`;
+             list.appendChild(el);
+           });
+      }
+      renderList('');
+      document.getElementById('faq-search').addEventListener('input', e => renderList(e.target.value));
+      window.scrollTo({top: document.getElementById('appArea').offsetTop-40, behavior:'smooth'});
+    }
+
+    /**********************
+     * QUIZ: questions per track
+     **********************/
+    const QUIZ_SET = {
+      Artist: [
+        {q:"What is preferred proof to show originality of artwork?", choices:["Prompt text only","Time-lapse or layer screenshots","Just posting on X","Private message"], a:1},
+        {q:"Which is discouraged for artist contributions?", choices:["Original hand-drawn work","Mass AI-generated content without process","Process videos","Creative collages"], a:1},
+        {q:"Where to post your artwork for Sentient?", choices:["artist-junior channel","builder-junior","educator-junior","random DMs"], a:0},
+        {q:"What increases visibility of a contribution?", choices:["Posting in relevant channels","Hiding work","Ignoring feedback","Deleting posts"], a:0},
+        {q:"What equals loyalty in Sentient's view?", choices:["Ownership + control","Profit only","Closed source","None"], a:0}
+      ],
+      Builder: [
+        {q:"What should a high-quality builder contribution include?", choices:["Technical guide or demo","No explanation","Private code only","Hidden assets"], a:0},
+        {q:"Where to host code for visibility?", choices:["GitHub","Local PC only","Encrypted private channel","None"], a:0},
+        {q:"What is useful to share in project details?", choices:["Purpose, tech stack, screenshots","Only a title","Only binary files","Encrypted notes"], a:0},
+        {q:"What improves community adoption of a builder tool?", choices:["Good docs + help","Keeping secret","Charging immediately without docs","No support"], a:0},
+        {q:"How to request AGI role promotion?", choices:["Submit application after contributions","Demand role without work","Spam channels","Delete contributions"], a:0}
+      ],
+      Educator: [
+        {q:"Which is an example of quality educator contribution?", choices:["Deep-dive analysis","Short repost without insight","One-line summary","Random quote"], a:0},
+        {q:"What should educational threads provide?", choices:["Original insights & use-cases","Only screenshots","Only external links","Blank text"], a:0},
+        {q:"Good educator content often includes:", choices:["Case studies, guides, reflections","Memes only","Private messages","Unrelated content"], a:0},
+        {q:"Where to share educator work?", choices:["educator-junior channel","artist-junior","builder-junior","spam"], a:0},
+        {q:"What increases educational value?", choices:["Critical analysis and examples","Copy-paste press release","Shallow quotes","No sources"], a:0}
+      ],
+      Helpers: [
+        {q:"Helper contributions are about:", choices:["Supporting newcomers","Building closed tools","Mass spamming","Hoarding info"], a:0},
+        {q:"Good helper behaviour includes:", choices:["Consistent helpful guidance","Being rude","Ignoring newcomers","Deleting helpful posts"], a:0},
+        {q:"Where do helpers often operate?", choices:["Discord channels helping others","Only private DMs","Maintaining silence","Posting only memes"], a:0},
+        {q:"Helper contributions help increase:", choices:["Community warmth and onboarding","Toxicity","Confusion","Secrets"], a:0},
+        {q:"What gets recognized for helper contributions?", choices:["Active support & patience","Being silent","Posting irrelevant links","Burning threads"], a:0}
+      ]
+    };
+
+    function renderQuiz(container){
+      container.innerHTML = `
+        <div class="glass p-6 rounded-2xl">
+          <h2 class="text-xl font-bold">Take a Sentient Quiz</h2>
+          <p class="text-sm text-gray-300 mt-1">Choose a track and answer 5 questions to earn points.</p>
+
+          <div class="mt-4 flex gap-2">
+            <select id="quiz-track" class="p-2 rounded-md text-black">
+              <option>Artist</option><option>Builder</option><option>Educator</option><option>Helpers</option>
+            </select>
+            <button class="ml-2 px-4 py-2 bg-[#00f0ff] rounded-md text-black" onclick="startQuiz()">Start</button>
+          </div>
+
+          <div id="quiz-area" class="mt-6"></div>
+        </div>
+      `;
+      window.scrollTo({top: document.getElementById('appArea').offsetTop-40, behavior:'smooth'});
+    }
+
+    let currentQuiz = null;
+    function startQuiz(){
+      const track = document.getElementById('quiz-track').value;
+      const set = QUIZ_SET[track];
+      currentQuiz = { track, set, idx:0, score:0, answers:[] };
+      renderQuestion();
+    }
+
+    function renderQuestion(){
+      const qa = currentQuiz.set[currentQuiz.idx];
+      const area = document.getElementById('quiz-area');
+      area.innerHTML = `
+        <div class="p-4 rounded-md bg-[#060618]">
+          <div class="font-semibold">Q${currentQuiz.idx+1}. ${qa.q}</div>
+          <div class="mt-3 space-y-3">${qa.choices.map((c,i)=>`<div><label class="cursor-pointer"><input type="radio" name="choice" value="${i}" class="mr-2">${c}</label></div>`).join('')}</div>
+          <div class="mt-4 flex gap-2">
+            <button class="px-4 py-2 bg-[#7b61ff] rounded-md" onclick="submitAnswer()">Submit</button>
+            <button class="px-4 py-2 border rounded-md" onclick="endQuiz('abandon')">Quit</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function submitAnswer(){
+      const choiceEl = document.querySelector('input[name="choice"]:checked');
+      if(!choiceEl){ alert('Choose an option'); return; }
+      const choice = parseInt(choiceEl.value);
+      const qa = currentQuiz.set[currentQuiz.idx];
+      if(choice === qa.a) currentQuiz.score += 1;
+      currentQuiz.answers.push({q:qa.q, chosen:choice});
+      currentQuiz.idx += 1;
+      if(currentQuiz.idx >= currentQuiz.set.length){
+        endQuiz('complete');
+      } else renderQuestion();
+    }
+
+    function endQuiz(status){
+      const area = document.getElementById('quiz-area');
+      if(status === 'complete'){
+        area.innerHTML = `<div class="p-4 rounded-md bg-[#021017]">
+          <div class="text-lg font-bold">Quiz Complete — ${currentQuiz.track}</div>
+          <div class="mt-2">Score: <span class="font-semibold">${currentQuiz.score}</span> / ${currentQuiz.set.length}</div>
+          <div class="mt-3 text-sm text-gray-300">Saved to your progress.</div>
+          <div class="mt-4 flex gap-2">
+            <button class="px-4 py-2 bg-[#00f0ff] rounded-md text-black" onclick="saveQuizResult()">Save & Close</button>
+            <button class="px-4 py-2 border rounded-md" onclick="showSection('progress')">View Progress</button>
+          </div>
+        </div>`;
+        if(currentQuiz.score >= Math.ceil(currentQuiz.set.length*0.8)) runConfetti();
+      } else {
+        area.innerHTML = `<div class="p-4 rounded-md bg-[#12020a]">Quiz Abandoned</div>`;
+      }
+    }
+
+    function saveQuizResult(){
+      const user = prompt("Enter your Discord username to save progress (demo):", "demo_user") || "demo_user";
+      const data = JSON.parse(localStorage.getItem('sentient_progress')||'{}');
+      data[user] = data[user] || { points:0, quizzes:[] , badges:[] };
+      const pointsEarned = currentQuiz.score * 10;
+      data[user].points += pointsEarned;
+      data[user].quizzes.push({track: currentQuiz.track, score: currentQuiz.score, date: new Date().toISOString()});
+      // award badge if high score
+      if(currentQuiz.score >= Math.ceil(currentQuiz.set.length*0.8)){
+        data[user].badges.push(`${currentQuiz.track} Ace`);
+      }
+      localStorage.setItem('sentient_progress', JSON.stringify(data));
+      updateStats();
+      showSection('progress');
+    }
+
+    /**********************
+     * CHATBOT: rule-based search in FAQ
+     **********************/
+    function renderChat(container){
+      container.innerHTML = `
+        <div class="glass p-6 rounded-2xl">
+          <h2 class="text-xl font-bold">AGI Assistant</h2>
+          <p class="text-sm text-gray-300 mt-1">Ask anything about Sentient mission, contributions, or roles.</p>
+
+          <div class="mt-4">
+            <textarea id="chat-input" rows="3" placeholder="e.g., How do I become Advanced AGI?" class="w-full p-3 rounded-md text-black"></textarea>
+            <div class="mt-3 flex gap-2">
+              <button class="px-4 py-2 bg-[#7b61ff] rounded-md" onclick="askBot()">Ask</button>
+              <button class="px-4 py-2 border rounded-md" onclick="clearChat()">Clear</button>
+            </div>
+          </div>
+
+          <div id="chat-log" class="mt-4 max-h-80 overflow-auto space-y-3"></div>
+        </div>
+      `;
+      window.scrollTo({top: document.getElementById('appArea').offsetTop-40, behavior:'smooth'});
+    }
+
+    function askBot(){
+      const text = document.getElementById('chat-input').value.trim();
+      if(!text) return alert('Type a question');
+      const log = document.getElementById('chat-log');
+      const userEl = document.createElement('div'); userEl.className='text-sm p-2 rounded-md bg-[#081122]'; userEl.innerHTML = `<strong>You:</strong> ${escapeHtml(text)}`; log.appendChild(userEl);
+      // find best FAQ match
+      const q = text.toLowerCase();
+      let best = null; let bestScore = 0;
+      FAQ.forEach(item => {
+        const hay = (item.q + ' ' + item.a).toLowerCase();
+        const common = countCommonWords(q, hay);
+        if(common > bestScore){ bestScore = common; best = item; }
+      });
+      const botEl = document.createElement('div'); botEl.className='text-sm p-3 rounded-md bg-[#02121b]';
+      if(best && bestScore > 0){
+        botEl.innerHTML = `<strong>AGI Bot:</strong> ${escapeHtml(best.a)}`;
+      } else {
+        botEl.innerHTML = `<strong>AGI Bot:</strong> Sorry — I couldn't find an exact match. Try keywords like "contribute", "whitepaper", "time-lapse", or "roles".`;
+      }
+      log.appendChild(botEl);
+      log.scrollTop = log.scrollHeight;
+      document.getElementById('chat-input').value = '';
+    }
+
+    function clearChat(){ document.getElementById('chat-log').innerHTML = ''; }
+
+    function countCommonWords(a,b){
+      const aw = a.split(/\W+/).filter(Boolean);
+      let count=0;
+      aw.forEach(w => { if(b.includes(w)) count++; });
+      return count;
+    }
+    function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    /**********************
+     * PROGRESS / LEADERBOARD
+     **********************/
+    function renderProgress(container){
+      const userData = JSON.parse(localStorage.getItem('sentient_progress')||'{}');
+      container.innerHTML = `
+        <div class="glass p-6 rounded-2xl">
+          <h2 class="text-xl font-bold">My Progress & Leaderboard</h2>
+          <p class="text-sm text-gray-300 mt-1">Saved quiz results and points (demo stored locally).</p>
+
+          <div class="mt-4 grid md:grid-cols-2 gap-4">
+            <div id="progress-left" class="p-4 bg-[#07071a] rounded-lg"></div>
+            <div id="progress-right" class="p-4 bg-[#07071a] rounded-lg"></div>
+          </div>
+        </div>
+      `;
+      // left: user list
+      const left = document.getElementById('progress-left');
+      left.innerHTML = `<div class="font-semibold">Your saved users (demo)</div><div id="user-list" class="mt-3 space-y-3"></div>`;
+      const listEl = document.getElementById('user-list');
+      for(const user in userData){
+        const u = userData[user];
+        const el = document.createElement('div');
+        el.className='p-3 rounded-md bg-[#020617]';
+        el.innerHTML = `<div class="flex justify-between"><div><strong>${user}</strong><div class="text-xs text-gray-400">Points: ${u.points} • Badges: ${u.badges?.length||0}</div></div><div><button class="px-2 py-1 text-xs border rounded" onclick="viewUser('${user}')">View</button></div></div>`;
+        listEl.appendChild(el);
+      }
+      // right: leaderboard
+      const right = document.getElementById('progress-right');
+      const leaderboard = Object.entries(userData).map(([u,d])=>({u,points:d.points||0})).sort((a,b)=>b.points-a.points).slice(0,10);
+      right.innerHTML = `<div class="font-semibold">Leaderboard (demo)</div><div class="mt-3 space-y-2">${leaderboard.map((p,i)=>`<div class="p-2 rounded-md bg-[#020617] flex justify-between"><div>${i+1}. <strong>${p.u}</strong></div><div>${p.points} pts</div></div>`).join('')}</div>`;
+      window.scrollTo({top: document.getElementById('appArea').offsetTop-40, behavior:'smooth'});
+    }
+
+    function viewUser(name){
+      const data = JSON.parse(localStorage.getItem('sentient_progress')||'{}');
+      const u = data[name];
+      alert(`${name}\nPoints: ${u.points}\nBadges: ${u.badges?.join(', ')||'None'}\nQuizzes: ${u.quizzes.map(q=>q.track+':'+q.score).join(' | ')}`);
+    }
+
+    /**********************
+     * small utilities: stats & confetti
+     **********************/
+    function updateStats(){
+      const data = JSON.parse(localStorage.getItem('sentient_progress')||'{}');
+      let quizzes=0, badges=0;
+      for(const u in data){ quizzes += (data[u].quizzes?.length||0); badges += (data[u].badges?.length||0); }
+      document.getElementById('stat-quizzes').innerText = quizzes;
+      document.getElementById('stat-badges').innerText = badges;
+    }
+    updateStats();
+
+    // confetti (tiny)
+    function runConfetti(){
+      try {
+        const canvas = document.getElementById('confetti-canvas');
+        canvas.width = innerWidth; canvas.height = innerHeight;
+        const ctx = canvas.getContext('2d');
+        const pieces = Array.from({length:70}).map(()=>({
+          x: Math.random()*canvas.width, y: -10,
+          vx: (Math.random()-0.5)*4, vy: Math.random()*4+2,
+          r: Math.random()*6+4, c: ['#00f0ff','#7b61ff','#00ffd6'][Math.floor(Math.random()*3)]
+        }));
+        let t = 0;
+        function loop(){
+          ctx.clearRect(0,0,canvas.width,canvas.height);
+          pieces.forEach(p=>{
+            p.x += p.vx; p.y += p.vy; p.vy += 0.08;
+            ctx.fillStyle = p.c; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+          });
+          t++; if(t>150){ ctx.clearRect(0,0,canvas.width,canvas.height); return; }
+          requestAnimationFrame(loop);
+        }
+        loop();
+      } catch(e){ console.warn('confetti failed',e); }
+    }
+
+    // mobile menu
+    function toggleMobile(){
+      alert('Use the header links on desktop or scroll to use features. (This demo is best on desktop.)');
+    }
+
+    // initialize: show hero / nothing
+    showSection('');
+  </script>
+</body>
+</html>
